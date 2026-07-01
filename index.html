@@ -475,8 +475,8 @@
             <div class="stars-decor">✨ 🌟 💫 🌟 ✨</div>
             <h2 style="font-size: 23px; color: #38bdf8; margin: 12px 0 5px 0; font-weight: 800; letter-spacing: 0.5px;">NAŠA SPOLOČNÁ SEKUNDA</h2>
             <p style="font-size: 14px; opacity: 0.85; padding: 0 15px; line-height: 1.5; margin: 0;">
-                <strong>Už idem láska moja!</strong><br>
-                Už nás nič nerozdelí...
+                <strong>Momentálne som vo vzduchu a blížim sa k tebe!</strong><br>
+                Pristávam presne o 08:00 ráno. Už nás nič nerozdelí...
             </p>
         </div>
 
@@ -493,10 +493,13 @@
     </div>
 
     <script>
-        const USER_PASSWORD = "201024"; 
-        const ADMIN_PASSWORD = "admin123"; 
+        // TU SI UPRAV HESLÁ PODĽA SEBA REŠPEKTÍVE PODĽA NEJ:
+        const MY_PASSWORD = "milujemju";    // Tvoje klasické heslo (reálny čas)
+        const HER_PASSWORD = "milujemta";     // Jej klasické heslo (reálny čas)
+        const ADMIN_PASSWORD = "admin201024";   // Tvoje testovacie admin heslo (Stroj času)
 
         let isAdminMode = false;
+        let currentUserPrefix = "shared"; // Predpona pre ukladanie otvorených okienok
         let particleInterval;
 
         // Skutočný cieľový dátum pristátia
@@ -524,17 +527,24 @@
 
         function checkPassword() {
             const entered = document.getElementById("password-field").value;
+            
             if (entered === ADMIN_PASSWORD) {
                 isAdminMode = true;
+                currentUserPrefix = "admin";
                 document.getElementById("admin-time-machine").style.display = "block";
                 
                 document.getElementById("sim-day").value = 1;
                 document.getElementById("sim-hour").value = 16;
                 updateSliderLabels();
-
                 enterApp();
-            } else if (entered === USER_PASSWORD) {
+            } else if (entered === MY_PASSWORD) {
                 isAdminMode = false;
+                currentUserPrefix = "my";
+                document.getElementById("admin-time-machine").style.display = "none";
+                enterApp();
+            } else if (entered === HER_PASSWORD) {
+                isAdminMode = false;
+                currentUserPrefix = "her";
                 document.getElementById("admin-time-machine").style.display = "none";
                 enterApp();
             } else {
@@ -610,7 +620,7 @@
             const fullscreenDisplay = document.getElementById("fullscreen-timer-display");
             if (document.getElementById("flight-modal").style.display === "flex") {
                 if (timeData.closed) {
-                    fullscreenDisplay.innerText = "Som už konečne pri tebe! ❤️";
+                    fullscreenDisplay.innerText = "PRISTÁL SOM! Som tu! ❤️";
                 } else {
                     fullscreenDisplay.innerText = timeData.string;
                 }
@@ -632,7 +642,8 @@
                 box.innerText = i;
 
                 let isUnlocked = false;
-                const hasOpenedBefore = localStorage.getItem(`box_opened_${i}`);
+                // Načítanie otvorených okienok podľa prihláseného používateľa
+                const hasOpenedBefore = localStorage.getItem(`${currentUserPrefix}_box_opened_${i}`);
 
                 if (currentMonth === 7) {
                     if (i < currentDay) {
@@ -659,8 +670,9 @@
         }
 
         function openGift(day, boxElement) {
+            // Ukladáme pod špecifickým kľúčom daného usera (v adminovi neukladáme trvalo)
             if (!isAdminMode) {
-                localStorage.setItem(`box_opened_${day}`, "true");
+                localStorage.setItem(`${currentUserPrefix}_box_opened_${day}`, "true");
             }
             boxElement.classList.remove("wiggle");
             boxElement.classList.add("opened");
