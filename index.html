@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Naše Odpočítavanie ❤️</title>
+    <style>
+        /* Luxusný iOS Štýl */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #ffe5ec, #ffc2d1);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #4a4a4a;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 375px;
+            height: 100vh;
+            max-height: 812px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* Obrazovka prihlásenia */
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 30px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .heart-icon {
+            font-size: 60px;
+            animation: pulse 1.5s infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ff4d6d;
+            margin: 0 0 10px 0;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #7d7d7d;
+            margin-bottom: 30px;
+        }
+
+        .input-style {
+            width: 80%;
+            padding: 14px;
+            border: 2px solid #ffb3c1;
+            border-radius: 20px;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: all 0.3s;
+        }
+
+        .input-style:focus {
+            border-color: #ff4d6d;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.2);
+        }
+
+        .btn-style {
+            background: linear-gradient(135deg, #ff758f, #ff4d6d);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(255, 77, 109, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .btn-style:active { transform: scale(0.97); }
+
+        /* Hlavná obrazovka s kalendárom */
+        #main-screen {
+            display: none;
+            padding: 25px;
+            box-sizing: border-box;
+        }
+
+        .countdown-box {
+            background: white;
+            border-radius: 25px;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            margin-bottom: 25px;
+        }
+
+        .countdown-timer {
+            font-size: 25px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff4d6d, #ff758f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+            margin-top: 5px;
+        }
+
+        /* ADMIN STROJ ČASU - PANEL */
+        .time-machine-panel {
+            background: #e6fffa;
+            border: 2px solid #319795;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #234e52;
+            text-align: left;
+        }
+        .time-machine-title {
+            font-weight: 800;
+            color: #285e61;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .control-group {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .control-group:last-child { margin-bottom: 0; }
+        .time-slider {
+            width: 60%;
+            accent-color: #319795;
+            cursor: pointer;
+        }
+        .slider-val {
+            font-weight: bold;
+            width: 50px;
+            text-align: right;
+            color: #319795;
+        }
+
+        /* Mriežka kalendára */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding-bottom: 20px;
+        }
+
+        /* Dizajn krabičky */
+        .box {
+            background: white;
+            aspect-ratio: 1;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ff758f;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.03);
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .box.wiggle {
+            animation: wiggleAnim 0.6s infinite alternate ease-in-out;
+            border-color: #ff758f;
+        }
+
+        @keyframes wiggleAnim {
+            0% { transform: rotate(-4deg) scale(1.02); }
+            100% { transform: rotate(4deg) scale(1.02); }
+        }
+
+        .box:active { transform: scale(0.93); }
+
+        .box::before {
+            content: "🎀";
+            font-size: 22px;
+            margin-bottom: 2px;
+        }
+
+        .box.opened {
+            background: #fff0f3;
+            color: #ff4d6d;
+            border-color: rgba(255, 77, 109, 0.15);
+        }
+        .box.opened::before { content: "💖"; }
+
+        .box.locked {
+            background: rgba(255, 255, 255, 0.3);
+            color: #b0b0b0;
+            border: 2px dashed rgba(0,0,0,0.05);
+            box-shadow: none;
+        }
+        .box.locked::before { content: "🔒"; font-size: 20px; }
+
+        /* FINÁLNE TLAČIDLO PRE LET */
+        #final-flight-btn {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        #final-flight-btn.secret-wrapped {
+            background: linear-gradient(135deg, #d1d5db, #e5e7eb);
+            color: #9ca3af;
+            border: 2px dashed #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #final-flight-btn.locked-btn {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #final-flight-btn.active-flight {
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+            animation: buttonGlow 2s infinite;
+        }
+
+        @keyframes buttonGlow {
+            0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.5); }
+            70% { box-shadow: 0 0 0 15px rgba(6, 182, 212, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+        }
+
+        /* MODAL PRE DARČEKY */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 320px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            animation: scaleUp 0.3s ease-out;
+        }
+
+        /* COOL FULLSCREEN MODAL PRE LET */
+        .fullscreen-flight-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, #090d16, #111827, #1e1b4b);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 25px 40px 25px;
+            box-sizing: border-box;
+            color: white;
+            overflow: hidden;
+            text-align: center;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .modal-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+
+        .modal-title { font-size: 20px; font-weight: 700; color: #ff4d6d; margin-bottom: 10px; }
+        .modal-text { font-size: 15px; line-height: 1.5; color: #555; margin-bottom: 20px; }
+        
+        /* Centrávny žiarivý letový odpočet v strede obrazovky */
+        .flight-center-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            z-index: 5;
+        }
+
+        .flight-big-timer {
+            font-size: 34px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #38bdf8, #ff758f, #f43f5e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 15px rgba(56, 189, 248, 0.4));
+            letter-spacing: 1px;
+            margin: 15px 0;
+            font-variant-numeric: tabular-nums;
+            animation: pulseTimer 2s infinite alternate;
+        }
+
+        @keyframes pulseTimer {
+            from { transform: scale(1); filter: drop-shadow(0 2px 10px rgba(56, 189, 248, 0.3)); }
+            to { transform: scale(1.03); filter: drop-shadow(0 2px 25px rgba(244, 63, 94, 0.5)); }
+        }
+
+        /* NOVÝ OBLOHOVÝ KONTAJNER NA CELÚ PLOCHU PRE LIETADLO */
+        .sky-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* LUXUSNÉ NEÓNOVÉ LIETADIELKO */
+        .animated-airplane {
+            font-size: 42px;
+            position: absolute;
+            left: -60px;
+            top: 40%;
+            transform: rotate(10deg);
+            animation: flyAcross 7s linear infinite;
+            filter: drop-shadow(0 0 15px #38bdf8) drop-shadow(0 0 5px white);
+        }
+
+        @keyframes flyAcross {
+            0% { left: -70px; top: 55%; transform: rotate(15deg); }
+            30% { top: 40%; transform: rotate(5deg); }
+            70% { top: 48%; transform: rotate(12deg); }
+            100% { left: 110%; top: 35%; transform: rotate(8deg); }
+        }
+
+        /* EFEKT TRBLIETAVEJ STOPY ZA LIETADLOM */
+        .trail-particle {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            pointer-events: none;
+            animation: fadeParticle 1.5s forwards linear;
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+            z-index: 2;
+        }
+
+        @keyframes fadeParticle {
+            0% { opacity: 1; transform: scale(1) translate(0, 0); }
+            50% { opacity: 0.7; }
+            100% { opacity: 0; transform: scale(0.4) translate(-20px, 15px); }
+        }
+
+        .stars-decor {
+            font-size: 14px;
+            opacity: 0.6;
+            animation: blink 2s infinite alternate;
+        }
+        @keyframes blink { from { opacity: 0.3; } to { opacity: 0.9; } }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        
+        <!-- 1. OBRAZOVKA: PRIHLÁSENIE -->
+        <div id="login-screen">
+            <div class="heart-icon">❤️</div>
+            <h1>Naše miesto</h1>
+            <div class="subtitle">Zadaj heslo, ktoré patrí len nám...</div>
+            <input type="password" id="password-field" class="input-style" placeholder="Heslo">
+            <button onclick="checkPassword()" class="btn-style">Vstúpiť</button>
+        </div>
+
+        <!-- 2. OBRAZOVKA: KALENDÁR -->
+        <div id="main-screen">
+            
+            <!-- STROJ ČASU (Len pre Admina) -->
+            <div id="admin-time-machine" class="time-machine-panel" style="display: none;">
+                <div class="time-machine-title">🛠️ STROJ ČASU (Simulácia) 🧭</div>
+                <div class="control-group">
+                    <label>Deň v júli:</label>
+                    <input type="range" id="sim-day" class="time-slider" min="1" max="17" value="1" oninput="onTimeSliderChange()">
+                    <span id="sim-day-val" class="slider-val">1.7.</span>
+                </div>
+                <div class="control-group">
+                    <label>Hodina:</label>
+                    <input type="range" id="sim-hour" class="time-slider" min="0" max="23" value="16" oninput="onTimeSliderChange()">
+                    <span id="sim-hour-val" class="slider-val">16:00</span>
+                </div>
+            </div>
+
+            <div class="countdown-box">
+                <div class="subtitle" style="margin-bottom: 2px;">Znova spolu už o:</div>
+                <div id="countdown-display" class="countdown-timer">00d : 00h : 00m : 00s</div>
+            </div>
+            
+            <div class="calendar-grid" id="boxes-grid">
+                <!-- Okienka sa vygenerujú cez JS -->
+            </div>
+
+            <!-- VEĽKÉ FINÁLNE TLAČIDLO -->
+            <button id="final-flight-btn" onclick="openFlightModal()"></button>
+        </div>
+
+    </div>
+
+    <!-- ŠTANDARDNÝ MODAL PRE DARČEKY (Dni 1-16) -->
+    <div id="gift-modal" class="modal">
+        <div class="modal-content">
+            <div id="gift-title" class="modal-title">Deň X</div>
+            <img id="gift-image" class="modal-image" src="" alt="Spomienka">
+            <div id="gift-text" class="modal-text">Text...</div>
+            <button onclick="closeModal()" class="btn-style" style="margin-top: 0; width: 100%;">Zatvoriť 💖</button>
+        </div>
+    </div>
+
+    <!-- COOL FULLSCREEN MODAL PRE LET -->
+    <div id="flight-modal" class="fullscreen-flight-modal">
+        
+        <!-- ANIMOVANÁ OBLOHO-SCÉNA PRE LIETADLO A ČASTICE -->
+        <div class="sky-container" id="sky-scene">
+            <div class="animated-airplane" id="plane-actor">✈️</div>
+        </div>
+
+        <!-- HORNÝ TEXT -->
+        <div style="z-index: 5; margin-top: 10px;">
+            <div class="stars-decor">✨ 🌟 💫 🌟 ✨</div>
+            <h2 style="font-size: 23px; color: #38bdf8; margin: 12px 0 5px 0; font-weight: 800; letter-spacing: 0.5px;">NAŠA SPOLOČNÁ SEKUNDA</h2>
+            <p style="font-size: 14px; opacity: 0.85; padding: 0 15px; line-height: 1.5; margin: 0;">
+                <strong>Momentálne som vo vzduchu a blížim sa k tebe!</strong><br>
+                Pristávam presne o 08:00 ráno. Už nás nič nerozdelí...
+            </p>
+        </div>
+
+        <!-- STREDNÝ BLOK: ODPOČET V PRESNOM STREDE SCREENU -->
+        <div class="flight-center-container">
+            <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 2.5px; opacity: 0.5; margin-bottom: 5px;">Čas do príletu</div>
+            <div id="fullscreen-timer-display" class="flight-big-timer">00d : 00h : 00m : 00s</div>
+        </div>
+
+        <!-- SPODNÉ TLAČIDLO -->
+        <div style="width: 100%; margin-bottom: 15px; z-index: 5;">
+            <button onclick="closeFlightModal()" class="btn-style" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; width: 85%; box-shadow: none; margin-top: 0; padding: 13px;">
+                Návrat do kalendára 🗺️
+            </button>
+        </div>
+    </div>
+
+    <audio id="bg-music" src="audio/love.mp3" loop></audio>
+
+    <script>
+        const USER_PASSWORD = "lubimta"; 
+        const ADMIN_PASSWORD = "admin123"; 
+
+        let isAdminMode = false;
+        let particleInterval;
+
+        // Skutočný cieľový dátum pristátia
+        const TARGET_LANDING_DATE = new Date('2026-07-17T08:00:00');
+
+        const dailyMessages = {
+            1: "Prvý deň nášho odpočítavania! Každým dňom som bližšie k tebe... 🤍",
+            2: "Dnes myslím na tvoj úsmev. Už sa neviem dočkať, kedy ťa objímem.",
+            3: "Pamätáš si na tento moment? Bola si taká nádherná...",
+            4: "Malé prekvapenie na dnešný deň! Chcem ti len bleskovo povedať, že ťa ľúbim.",
+            5: "Ďalší deň úspešne za nami. Čas letí, keď sa teším na teba!",
+            6: "Dnes ti posielam virtuálny sladký bozk. Už len kúsok!",
+            7: "Sme skoro v prvej tretine! Si to najlepšie, čo ma v životote stretlo.",
+            8: "Dnes si pozri túto fotku a usmej sa, prosím. Chýbaš mi.",
+            9: "Milujem naše spoločné chvíle a táto spomienka patrí medzi moje naj.",
+            10: "Už jednociferné číslo! Odpočítavam každú jednu sekundu.",
+            11: "Dnes je krásny deň na to, aby som ti pripomenul, aká si neskutočne úžasná.",
+            12: "Moje srdce bije len pre teba, nech sme akokoľvek ďaleko od seba.",
+            13: "Už len párkrát sa bez seba vyspíme a budeme zaspávať spolu.",
+            14: "Čas sa kráti! Už čoskoro budem baliť kufre.",
+            15: "Zostávajú posledné dni. Neviem sa dočkať chvíle, keď ťa opäť chytím za ruku.",
+            16: "Zajtra je ten deň... Dnes nebudem môcť od vzrušenia a nedočkavosti ani spať!",
+            17: "KONEČNE JE TO TU! Dnes letím domov za tebou. Pozri si odpočet nižšie! ❤️"
+        };
+
+        function checkPassword() {
+            const entered = document.getElementById("password-field").value;
+            if (entered === ADMIN_PASSWORD) {
+                isAdminMode = true;
+                document.getElementById("admin-time-machine").style.display = "block";
+                
+                // Nastavíme predvolenú simuláciu na dnešný stav (1. júl, 16:00)
+                document.getElementById("sim-day").value = 1;
+                document.getElementById("sim-hour").value = 16;
+                updateSliderLabels();
+
+                enterApp();
+            } else if (entered === USER_PASSWORD) {
+                isAdminMode = false;
+                document.getElementById("admin-time-machine").style.display = "none";
+                enterApp();
+            } else {
+                alert("Nesprávne heslo! 😘");
+            }
+        }
+
+        function enterApp() {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("main-screen").style.display = "block";
+            document.getElementById("bg-music").play().catch(() => {});
+            
+            updateCountdown();
+            // Pri bežnom režime aktualizujeme každú sekundu, pri adminovi to riadia aj slajdre
+            setInterval(updateCountdown, 1000); 
+            generateBoxes();
+            manageFlightButton();
+        }
+
+        // Pomocná funkcia: Vráti aktuálny čas alebo nasimulovaný čas (ak je to admin)
+        function getCurrentTime() {
+            if (isAdminMode) {
+                const simDay = parseInt(document.getElementById("sim-day").value);
+                const simHour = parseInt(document.getElementById("sim-hour").value);
+                
+                // Vytvoríme fiktívny dátum pre rok 2026, júl, vybraný deň a hodinu
+                const simDate = new Date();
+                simDate.setFullYear(2026);
+                simDate.setMonth(6); // 6 je Júl (počíta sa od 0)
+                simDate.setDate(simDay);
+                simDate.setHours(simHour, 0, 0, 0); // minúty a sekundy vynulujeme pre prehľadnosť
+                return simDate;
+            } else {
+                return new Date(); // Reálny aktuálny čas pre klasického používateľa
+            }
+        }
+
+        function updateSliderLabels() {
+            const d = document.getElementById("sim-day").value;
+            const h = document.getElementById("sim-hour").value;
+            document.getElementById("sim-day-val").innerText = d + ".7.";
+            document.getElementById("sim-hour-val").innerText = h.padStart(2, '0') + ":00";
+        }
+
+        function onTimeSliderChange() {
+            updateSliderLabels();
+            updateCountdown();
+            generateBoxes();
+            manageFlightButton();
+        }
+
+        function getFormattedTimeDifference() {
+            const now = getCurrentTime();
+            const difference = TARGET_LANDING_DATE - now;
+
+            if (difference <= 0) {
+                return { closed: true, string: "SME SPOLU! ❤️" };
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            
+            const dStr = days + "d";
+            const hStr = String(hours).padStart(2, '0') + "h";
+            const mStr = String(minutes).padStart(2, '0') + "m";
+            const sStr = String(seconds).padStart(2, '0') + "s";
+
+            return { closed: false, string: `${dStr} : ${hStr} : ${mStr} : ${sStr}` };
+        }
+
+        function updateCountdown() {
+            const timeData = getFormattedTimeDifference();
+            document.getElementById("countdown-display").innerText = timeData.string;
+            
+            const fullscreenDisplay = document.getElementById("fullscreen-timer-display");
+            if (document.getElementById("flight-modal").style.display === "flex") {
+                if (timeData.closed) {
+                    fullscreenDisplay.innerText = "PRISTÁL SOM! Som tu! ❤️";
+                } else {
+                    fullscreenDisplay.innerText = timeData.string;
+                }
+            }
+        }
+
+        function generateBoxes() {
+            const grid = document.getElementById("boxes-grid");
+            grid.innerHTML = "";
+
+            const now = getCurrentTime();
+            const currentDay = now.getDate();
+            const currentMonth = now.getMonth() + 1;
+            const currentHour = now.getHours();
+
+            for (let i = 1; i <= 17; i++) {
+                const box = document.createElement("div");
+                box.classList.add("box");
+                box.innerText = i;
+
+                let isUnlocked = false;
+                const hasOpenedBefore = localStorage.getItem(`box_opened_${i}`);
+
+                // Podmienka odomknutia (platí pre reálny aj nasimulovaný čas rovnako!)
+                if (currentMonth === 7) {
+                    if (i < currentDay) {
+                        isUnlocked = true;
+                    } else if (i === currentDay && currentHour >= 3) {
+                        isUnlocked = true;
+                    }
+                }
+
+                if (isUnlocked) {
+                    if (hasOpenedBefore) {
+                        box.classList.add("opened");
+                    } else {
+                        box.classList.add("wiggle");
+                    }
+                    box.onclick = () => openGift(i, box);
+                } else {
+                    box.classList.add("locked");
+                    box.onclick = () => alert("Toto okienko spinká a otvorí sa až o 3:00 ráno! 🌙");
+                }
+
+                grid.appendChild(box);
+            }
+        }
+
+        function openGift(day, boxElement) {
+            // Ukladáme otvorenie iba, ak netestujeme v admin móde, aby sme si nepokazili reálny zážitok
+            if (!isAdminMode) {
+                localStorage.setItem(`box_opened_${day}`, "true");
+            }
+            boxElement.classList.remove("wiggle");
+            boxElement.classList.add("opened");
+
+            document.getElementById("gift-title").innerText = `Deň ${day} ❤️`;
+            document.getElementById("gift-image").style.display = "block";
+            document.getElementById("gift-image").src = `media/${day}.jpg`;
+            document.getElementById("gift-text").innerText = dailyMessages[day] || "Milujem ťa! 💕";
+            document.getElementById("gift-modal").style.display = "flex";
+        }
+
+        function manageFlightButton() {
+            const btn = document.getElementById("final-flight-btn");
+            const now = getCurrentTime();
+            
+            const is17July = (now.getMonth() + 1 === 7 && now.getDate() === 17 && now.getHours() >= 3);
+            
+            if (is17July) {
+                const isAfter6Am = (now.getHours() >= 6);
+                
+                if (isAfter6Am) {
+                    btn.className = "active-flight";
+                    btn.innerHTML = "✈️ LETÍM ZA TEBOU! <br><span style='font-size:12px;'>Klikni pre živý odpočet pristátia</span>";
+                    btn.disabled = false;
+                } else {
+                    btn.className = "locked-btn";
+                    btn.innerHTML = "🔒 Tlačidlo sa odomkne o 06:00 ráno...<br><span style='font-size:12px;'>Sleduj odlet na Stroji času</span>";
+                    btn.disabled = true;
+                }
+            } else {
+                btn.className = "secret-wrapped";
+                btn.innerHTML = "🎁❓ ŠPECIÁLNE PREKVAPENIE<br><span style='font-size:11px;'>Odomkne sa až v posledný deň...</span>";
+                btn.disabled = true;
+            }
+        }
+
+        // ŠTARTOVANIE TRBLIETAVEJ STOPY (TRAIL) ZA LIETADLOM
+        function startStarTrail() {
+            const plane = document.getElementById("plane-actor");
+            const sky = document.getElementById("sky-scene");
+            const symbols = ["✨", "★", ".", "•", "🚀", "✧"];
+
+            particleInterval = setInterval(() => {
+                const rect = plane.getBoundingClientRect();
+                if (rect.left < 0 || rect.left > window.innerWidth) return;
+
+                const particle = document.createElement("div");
+                particle.className = "trail-particle";
+                particle.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                
+                particle.style.left = (rect.left + 15) + "px";
+                particle.style.top = (rect.top + rect.height / 2 + (Math.random() * 10 - 5)) + "px";
+
+                sky.appendChild(particle);
+
+                setTimeout(() => { particle.remove(); }, 1500);
+            }, 120);
+        }
+
+        function openFlightModal() {
+            const timeData = getFormattedTimeDifference();
+            document.getElementById("fullscreen-timer-display").innerText = timeData.string;
+            document.getElementById("flight-modal").style.display = "flex";
+            startStarTrail();
+        }
+
+        function closeFlightModal() {
+            document.getElementById("flight-modal").style.display = "none";
+            if (particleInterval) clearInterval(particleInterval);
+        }
+
+        function closeModal() {
+            document.getElementById("gift-modal").style.display = "none";
+        }
+    </script>
+</body>
+</html>
