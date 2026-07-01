@@ -419,7 +419,6 @@
 
     <div class="phone-container">
         
-        <!-- 1. OBRAZOVKA: PRIHLÁSENIE -->
         <div id="login-screen">
             <div class="heart-icon">❤️</div>
             <h1>Naše miesto</h1>
@@ -428,10 +427,8 @@
             <button onclick="checkPassword()" class="btn-style">Vstúpiť</button>
         </div>
 
-        <!-- 2. OBRAZOVKA: KALENDÁR -->
         <div id="main-screen">
             
-            <!-- STROJ ČASU (Len pre Admina) -->
             <div id="admin-time-machine" class="time-machine-panel" style="display: none;">
                 <div class="time-machine-title">🛠️ STROJ ČASU (Simulácia) 🧭</div>
                 <div class="control-group">
@@ -452,16 +449,13 @@
             </div>
             
             <div class="calendar-grid" id="boxes-grid">
-                <!-- Okienka sa vygenerujú cez JS -->
-            </div>
+                </div>
 
-            <!-- VEĽKÉ FINÁLNE TLAČIDLO -->
             <button id="final-flight-btn" onclick="openFlightModal()"></button>
         </div>
 
     </div>
 
-    <!-- ŠTANDARDNÝ MODAL PRE DARČEKY (Dni 1-16) -->
     <div id="gift-modal" class="modal">
         <div class="modal-content">
             <div id="gift-title" class="modal-title">Deň X</div>
@@ -471,15 +465,12 @@
         </div>
     </div>
 
-    <!-- COOL FULLSCREEN MODAL PRE LET -->
     <div id="flight-modal" class="fullscreen-flight-modal">
         
-        <!-- ANIMOVANÁ OBLOHO-SCÉNA PRE LIETADLO A ČASTICE -->
         <div class="sky-container" id="sky-scene">
             <div class="animated-airplane" id="plane-actor">✈️</div>
         </div>
 
-        <!-- HORNÝ TEXT -->
         <div style="z-index: 5; margin-top: 10px;">
             <div class="stars-decor">✨ 🌟 💫 🌟 ✨</div>
             <h2 style="font-size: 23px; color: #38bdf8; margin: 12px 0 5px 0; font-weight: 800; letter-spacing: 0.5px;">NAŠA SPOLOČNÁ SEKUNDA</h2>
@@ -489,21 +480,17 @@
             </p>
         </div>
 
-        <!-- STREDNÝ BLOK: ODPOČET V PRESNOM STREDE SCREENU -->
         <div class="flight-center-container">
             <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 2.5px; opacity: 0.5; margin-bottom: 5px;">Čas do príletu</div>
             <div id="fullscreen-timer-display" class="flight-big-timer">00d : 00h : 00m : 00s</div>
         </div>
 
-        <!-- SPODNÉ TLAČIDLO -->
         <div style="width: 100%; margin-bottom: 15px; z-index: 5;">
             <button onclick="closeFlightModal()" class="btn-style" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; width: 85%; box-shadow: none; margin-top: 0; padding: 13px;">
                 Návrat do kalendára 🗺️
             </button>
         </div>
     </div>
-
-    <audio id="bg-music" src="audio/love.mp3" loop></audio>
 
     <script>
         const USER_PASSWORD = "lubimta"; 
@@ -522,7 +509,7 @@
             4: "Malé prekvapenie na dnešný deň! Chcem ti len bleskovo povedať, že ťa ľúbim.",
             5: "Ďalší deň úspešne za nami. Čas letí, keď sa teším na teba!",
             6: "Dnes ti posielam virtuálny sladký bozk. Už len kúsok!",
-            7: "Sme skoro v prvej tretine! Si to najlepšie, čo ma v životote stretlo.",
+            7: "Sme skoro v prvej tretine! Si to najlepšie, čo ma v živote stretlo.",
             8: "Dnes si pozri túto fotku a usmej sa, prosím. Chýbaš mi.",
             9: "Milujem naše spoločné chvíle a táto spomienka patrí medzi moje naj.",
             10: "Už jednociferné číslo! Odpočítavam každú jednu sekundu.",
@@ -541,7 +528,6 @@
                 isAdminMode = true;
                 document.getElementById("admin-time-machine").style.display = "block";
                 
-                // Nastavíme predvolenú simuláciu na dnešný stav (1. júl, 16:00)
                 document.getElementById("sim-day").value = 1;
                 document.getElementById("sim-hour").value = 16;
                 updateSliderLabels();
@@ -559,30 +545,26 @@
         function enterApp() {
             document.getElementById("login-screen").style.display = "none";
             document.getElementById("main-screen").style.display = "block";
-            document.getElementById("bg-music").play().catch(() => {});
             
             updateCountdown();
-            // Pri bežnom režime aktualizujeme každú sekundu, pri adminovi to riadia aj slajdre
             setInterval(updateCountdown, 1000); 
             generateBoxes();
             manageFlightButton();
         }
 
-        // Pomocná funkcia: Vráti aktuálny čas alebo nasimulovaný čas (ak je to admin)
         function getCurrentTime() {
             if (isAdminMode) {
                 const simDay = parseInt(document.getElementById("sim-day").value);
                 const simHour = parseInt(document.getElementById("sim-hour").value);
                 
-                // Vytvoríme fiktívny dátum pre rok 2026, júl, vybraný deň a hodinu
                 const simDate = new Date();
                 simDate.setFullYear(2026);
-                simDate.setMonth(6); // 6 je Júl (počíta sa od 0)
+                simDate.setMonth(6); 
                 simDate.setDate(simDay);
-                simDate.setHours(simHour, 0, 0, 0); // minúty a sekundy vynulujeme pre prehľadnosť
+                simDate.setHours(simHour, 0, 0, 0); 
                 return simDate;
             } else {
-                return new Date(); // Reálny aktuálny čas pre klasického používateľa
+                return new Date(); 
             }
         }
 
@@ -652,7 +634,6 @@
                 let isUnlocked = false;
                 const hasOpenedBefore = localStorage.getItem(`box_opened_${i}`);
 
-                // Podmienka odomknutia (platí pre reálny aj nasimulovaný čas rovnako!)
                 if (currentMonth === 7) {
                     if (i < currentDay) {
                         isUnlocked = true;
@@ -678,7 +659,6 @@
         }
 
         function openGift(day, boxElement) {
-            // Ukladáme otvorenie iba, ak netestujeme v admin móde, aby sme si nepokazili reálny zážitok
             if (!isAdminMode) {
                 localStorage.setItem(`box_opened_${day}`, "true");
             }
@@ -717,7 +697,6 @@
             }
         }
 
-        // ŠTARTOVANIE TRBLIETAVEJ STOPY (TRAIL) ZA LIETADLOM
         function startStarTrail() {
             const plane = document.getElementById("plane-actor");
             const sky = document.getElementById("sky-scene");
