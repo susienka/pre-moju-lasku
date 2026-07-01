@@ -480,9 +480,7 @@
 
     <div class="phone-container">
         
-        <!-- 1. OBRAZOVKA: PRIHLÁSENIE (Vylepšená s časticami) -->
         <div id="login-screen">
-            <!-- Sem JavaScript dynamicky vygeneruje padajúce trblietky -->
             <div class="login-card">
                 <div class="heart-container">
                     <div class="heart-icon">❤️</div>
@@ -494,10 +492,8 @@
             </div>
         </div>
 
-        <!-- 2. OBRAZOVKA: KALENDÁR -->
         <div id="main-screen">
             
-            <!-- STROJ ČASU (Len pre Admina) -->
             <div id="admin-time-machine" class="time-machine-panel" style="display: none;">
                 <div class="time-machine-title">🛠️ STROJ ČASU (Simulácia) 🧭</div>
                 <div class="control-group">
@@ -518,16 +514,13 @@
             </div>
             
             <div class="calendar-grid" id="boxes-grid">
-                <!-- Okienka sa vygenerujú cez JS -->
-            </div>
+                </div>
 
-            <!-- VEĽKÉ FINÁLNE TLAČIDLO -->
             <button id="final-flight-btn" onclick="openFlightModal()"></button>
         </div>
 
     </div>
 
-    <!-- ŠTANDARDNÝ MODAL PRE DARČEKY (Dni 1-16) -->
     <div id="gift-modal" class="modal">
         <div class="modal-content">
             <div id="gift-title" class="modal-title">Deň X</div>
@@ -537,31 +530,26 @@
         </div>
     </div>
 
-    <!-- COOL FULLSCREEN MODAL PRE LET -->
     <div id="flight-modal" class="fullscreen-flight-modal">
         
-        <!-- ANIMOVANÁ OBLOHO-SCÉNA PRE LIETADLO A ČASTICE -->
         <div class="sky-container" id="sky-scene">
             <div class="animated-airplane" id="plane-actor">✈️</div>
         </div>
 
-        <!-- HORNÝ TEXT -->
         <div style="z-index: 5; margin-top: 10px;">
             <div class="stars-decor">✨ 🌟 💫 🌟 ✨</div>
             <h2 style="font-size: 23px; color: #38bdf8; margin: 12px 0 5px 0; font-weight: 800; letter-spacing: 0.5px;">NAŠA SPOLOČNÁ SEKUNDA</h2>
             <p style="font-size: 14px; opacity: 0.85; padding: 0 15px; line-height: 1.5; margin: 0;">
                 <strong>Už za chvíľu sme spolu láska!</strong><br>
-                PUž nás nič nerozdelí...
+                Už nás nič nerozdelí...
             </p>
         </div>
 
-        <!-- STREDNÝ BLOK: ODPOČET V PRESNOM STREDE SCREENU -->
         <div class="flight-center-container">
             <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 2.5px; opacity: 0.5; margin-bottom: 5px;">Čas do príletu</div>
             <div id="fullscreen-timer-display" class="flight-big-timer">00d : 00h : 00m : 00s</div>
         </div>
 
-        <!-- SPODNÉ TLAČIDLO -->
         <div style="width: 100%; margin-bottom: 15px; z-index: 5;">
             <button onclick="closeFlightModal()" class="btn-style" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; width: 85%; box-shadow: none; margin-top: 0; padding: 13px;">
                 Návrat do kalendára 🗺️
@@ -570,24 +558,22 @@
     </div>
 
     <script>
-        // TU SI UPRAV HESLÁ PODĽA SEBA REŠPEKTÍVE PODĽA NEJ:
-        const MY_PASSWORD = "milujemju";    // Tvoje klasické heslo (reálny čas)
-        const HER_PASSWORD = "milujemta";     // Jej klasické heslo (reálny čas)
-        const ADMIN_PASSWORD = "admin201024";   // Tvoje testovacie admin heslo (Stroj času)
+        const MY_PASSWORD = "milujemju";    
+        const HER_PASSWORD = "milujemta";     
+        const ADMIN_PASSWORD = "admin201024";   
 
         let isAdminMode = false;
         let currentUserPrefix = "shared"; 
         let particleInterval;
         let loginParticlesInterval;
 
-        // Skutočný cieľový dátum pristátia
         const TARGET_LANDING_DATE = new Date('2026-07-17T08:00:00');
 
         const dailyMessages = {
             1: "Prvý deň nášho odpočítavania! Každým dňom som bližšie k tebe... 🤍",
             2: "Dnes myslím na tvoj úsmev. Už sa neviem dočkať, kedy ťa objímem.",
             3: "Pamätáš si na tento moment? Bola si taká nádherná...",
-            4: "Malé prekvapение na dnešný deň! Chcem ti len bleskovo povedať, že ťa ľúbim.",
+            4: "Malé prekvapenie na dnešný deň! Chcem ti len bleskovo povedať, že ťa ľúbim.",
             5: "Ďalší deň úspešne za nami. Čas letí, keď sa teším na teba!",
             6: "Dnes ti posielam virtuálny sladký bozk. Už len kúsok!",
             7: "Sme skoro v prvej tretine! Si to najlepšie, čo ma v živote stretlo.",
@@ -603,7 +589,6 @@
             17: "KONEČNE JE TO TU! Dnes letím domov za tebou. Pozri si odpočet nižšie! ❤️"
         };
 
-        // Generovanie padajúcich efektov na login obrazovke
         function createLoginParticles() {
             const loginScreen = document.getElementById("login-screen");
             const shapes = ["✨", "💖", "🌸", "💕", "✨", "*"];
@@ -615,7 +600,6 @@
                 p.className = "falling-particle";
                 p.innerText = shapes[Math.floor(Math.random() * shapes.length)];
                 
-                // Náhodná pozícia a vlastnosti
                 p.style.left = Math.random() * 100 + "%";
                 p.style.fontSize = Math.random() * (20 - 10) + 10 + "px";
                 
@@ -628,7 +612,6 @@
             }, 400);
         }
 
-        // Spustenie hneď pri načítaní
         createLoginParticles();
 
         function checkPassword() {
@@ -659,7 +642,7 @@
         }
 
         function enterApp() {
-            clearInterval(loginParticlesInterval); // Zastavíme generovanie padania
+            clearInterval(loginParticlesInterval); 
             document.getElementById("login-screen").style.display = "none";
             document.getElementById("main-screen").style.display = "block";
             
