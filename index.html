@@ -17,6 +17,7 @@
             min-height: 100vh;
             color: #4a4a4a;
             -webkit-font-smoothing: antialiased;
+            overflow: hidden;
         }
 
         .phone-container {
@@ -24,7 +25,7 @@
             max-width: 375px;
             height: 100vh;
             max-height: 812px;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
@@ -35,7 +36,7 @@
             box-sizing: border-box;
         }
 
-        /* Obrazovka prihlásenia */
+        /* OBRAZOVKA PRIHLÁSENIA - NOVÝ DIZAJN */
         #login-screen {
             display: flex;
             flex-direction: column;
@@ -45,68 +46,128 @@
             padding: 30px;
             text-align: center;
             box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(255,240,243,0.6) 0%, rgba(255,194,209,0.4) 100%);
+        }
+
+        /* Padajúce magické prvky */
+        .falling-particle {
+            position: absolute;
+            top: -20px;
+            pointer-events: none;
+            animation: fallAnimation linear infinite;
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        @keyframes fallAnimation {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(830px) rotate(360deg); opacity: 0; }
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 35px 25px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            width: 90%;
+            box-sizing: border-box;
+            z-index: 2;
+            animation: cardFloatIn 0.8s ease-out;
+        }
+
+        @keyframes cardFloatIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .heart-container {
+            position: relative;
+            margin-bottom: 15px;
+            animation: floatingHeart 3s ease-in-out infinite alternate;
         }
 
         .heart-icon {
-            font-size: 60px;
-            animation: pulse 1.5s infinite;
-            margin-bottom: 20px;
+            font-size: 65px;
+            animation: pulse 1.6s infinite ease-in-out;
+            display: inline-block;
+            filter: drop-shadow(0 4px 10px rgba(255, 77, 109, 0.3));
+        }
+
+        @keyframes floatingHeart {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-12px); }
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.08); }
             100% { transform: scale(1); }
         }
 
         h1 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #ff4d6d;
-            margin: 0 0 10px 0;
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff4d6d, #ff758f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
-            font-size: 15px;
-            color: #7d7d7d;
-            margin-bottom: 30px;
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 25px;
+            line-height: 1.4;
         }
 
         .input-style {
-            width: 80%;
-            padding: 14px;
-            border: 2px solid #ffb3c1;
-            border-radius: 20px;
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ffccd5;
+            border-radius: 22px;
             font-size: 16px;
             text-align: center;
             outline: none;
-            background: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
         .input-style:focus {
             border-color: #ff4d6d;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.2);
+            box-shadow: 0 0 12px rgba(255, 77, 109, 0.25);
+            background: white;
         }
 
         .btn-style {
             background: linear-gradient(135deg, #ff758f, #ff4d6d);
             color: white;
             border: none;
-            padding: 14px 40px;
-            border-radius: 20px;
+            width: 100%;
+            padding: 15px;
+            border-radius: 22px;
             font-size: 16px;
-            font-weight: 600;
-            margin-top: 20px;
+            font-weight: 700;
+            margin-top: 18px;
             cursor: pointer;
-            box-shadow: 0 6px 15px rgba(255, 77, 109, 0.3);
-            transition: transform 0.2s;
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            letter-spacing: 0.5px;
         }
 
-        .btn-style:active { transform: scale(0.97); }
+        .btn-style:active { transform: scale(0.96); box-shadow: 0 3px 10px rgba(255, 77, 109, 0.4); }
 
-        /* Hlavná obrazovka s kalendárom */
+        /* HLAVNÁ OBRAZOVKA S KALENDÁROM */
         #main-screen {
             display: none;
             padding: 25px;
@@ -419,16 +480,24 @@
 
     <div class="phone-container">
         
+        <!-- 1. OBRAZOVKA: PRIHLÁSENIE (Vylepšená s časticami) -->
         <div id="login-screen">
-            <div class="heart-icon">❤️</div>
-            <h1>Naše miesto</h1>
-            <div class="subtitle">Zadaj heslo, ktoré patrí len nám...</div>
-            <input type="password" id="password-field" class="input-style" placeholder="Heslo">
-            <button onclick="checkPassword()" class="btn-style">Vstúpiť</button>
+            <!-- Sem JavaScript dynamicky vygeneruje padajúce trblietky -->
+            <div class="login-card">
+                <div class="heart-container">
+                    <div class="heart-icon">❤️</div>
+                </div>
+                <h1>Naše miesto</h1>
+                <div class="subtitle">Zadaj svoje tajné heslo a vstúp do nášho odpočítavania...</div>
+                <input type="password" id="password-field" class="input-style" placeholder="Tvoje heslo">
+                <button onclick="checkPassword()" class="btn-style">Vstúpiť ✨</button>
+            </div>
         </div>
 
+        <!-- 2. OBRAZOVKA: KALENDÁR -->
         <div id="main-screen">
             
+            <!-- STROJ ČASU (Len pre Admina) -->
             <div id="admin-time-machine" class="time-machine-panel" style="display: none;">
                 <div class="time-machine-title">🛠️ STROJ ČASU (Simulácia) 🧭</div>
                 <div class="control-group">
@@ -449,13 +518,16 @@
             </div>
             
             <div class="calendar-grid" id="boxes-grid">
-                </div>
+                <!-- Okienka sa vygenerujú cez JS -->
+            </div>
 
+            <!-- VEĽKÉ FINÁLNE TLAČIDLO -->
             <button id="final-flight-btn" onclick="openFlightModal()"></button>
         </div>
 
     </div>
 
+    <!-- ŠTANDARDNÝ MODAL PRE DARČEKY (Dni 1-16) -->
     <div id="gift-modal" class="modal">
         <div class="modal-content">
             <div id="gift-title" class="modal-title">Deň X</div>
@@ -465,26 +537,31 @@
         </div>
     </div>
 
+    <!-- COOL FULLSCREEN MODAL PRE LET -->
     <div id="flight-modal" class="fullscreen-flight-modal">
         
+        <!-- ANIMOVANÁ OBLOHO-SCÉNA PRE LIETADLO A ČASTICE -->
         <div class="sky-container" id="sky-scene">
             <div class="animated-airplane" id="plane-actor">✈️</div>
         </div>
 
+        <!-- HORNÝ TEXT -->
         <div style="z-index: 5; margin-top: 10px;">
             <div class="stars-decor">✨ 🌟 💫 🌟 ✨</div>
             <h2 style="font-size: 23px; color: #38bdf8; margin: 12px 0 5px 0; font-weight: 800; letter-spacing: 0.5px;">NAŠA SPOLOČNÁ SEKUNDA</h2>
             <p style="font-size: 14px; opacity: 0.85; padding: 0 15px; line-height: 1.5; margin: 0;">
-                <strong>Už sme za chvíľu spolu!</strong><br>
-                Už nás nič nerozdelí...
+                <strong>Už za chvíľu sme spolu láska!</strong><br>
+                PUž nás nič nerozdelí...
             </p>
         </div>
 
+        <!-- STREDNÝ BLOK: ODPOČET V PRESNOM STREDE SCREENU -->
         <div class="flight-center-container">
             <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 2.5px; opacity: 0.5; margin-bottom: 5px;">Čas do príletu</div>
             <div id="fullscreen-timer-display" class="flight-big-timer">00d : 00h : 00m : 00s</div>
         </div>
 
+        <!-- SPODNÉ TLAČIDLO -->
         <div style="width: 100%; margin-bottom: 15px; z-index: 5;">
             <button onclick="closeFlightModal()" class="btn-style" style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; width: 85%; box-shadow: none; margin-top: 0; padding: 13px;">
                 Návrat do kalendára 🗺️
@@ -499,8 +576,9 @@
         const ADMIN_PASSWORD = "admin201024";   // Tvoje testovacie admin heslo (Stroj času)
 
         let isAdminMode = false;
-        let currentUserPrefix = "shared"; // Predpona pre ukladanie otvorených okienok
+        let currentUserPrefix = "shared"; 
         let particleInterval;
+        let loginParticlesInterval;
 
         // Skutočný cieľový dátum pristátia
         const TARGET_LANDING_DATE = new Date('2026-07-17T08:00:00');
@@ -509,7 +587,7 @@
             1: "Prvý deň nášho odpočítavania! Každým dňom som bližšie k tebe... 🤍",
             2: "Dnes myslím na tvoj úsmev. Už sa neviem dočkať, kedy ťa objímem.",
             3: "Pamätáš si na tento moment? Bola si taká nádherná...",
-            4: "Malé prekvapenie na dnešný deň! Chcem ti len bleskovo povedať, že ťa ľúbim.",
+            4: "Malé prekvapение na dnešný deň! Chcem ti len bleskovo povedať, že ťa ľúbim.",
             5: "Ďalší deň úspešne za nami. Čas letí, keď sa teším na teba!",
             6: "Dnes ti posielam virtuálny sladký bozk. Už len kúsok!",
             7: "Sme skoro v prvej tretine! Si to najlepšie, čo ma v živote stretlo.",
@@ -524,6 +602,34 @@
             16: "Zajtra je ten deň... Dnes nebudem môcť od vzrušenia a nedočkavosti ani spať!",
             17: "KONEČNE JE TO TU! Dnes letím domov za tebou. Pozri si odpočet nižšie! ❤️"
         };
+
+        // Generovanie padajúcich efektov na login obrazovke
+        function createLoginParticles() {
+            const loginScreen = document.getElementById("login-screen");
+            const shapes = ["✨", "💖", "🌸", "💕", "✨", "*"];
+            
+            loginParticlesInterval = setInterval(() => {
+                if (loginScreen.style.display === "none") return;
+                
+                const p = document.createElement("div");
+                p.className = "falling-particle";
+                p.innerText = shapes[Math.floor(Math.random() * shapes.length)];
+                
+                // Náhodná pozícia a vlastnosti
+                p.style.left = Math.random() * 100 + "%";
+                p.style.fontSize = Math.random() * (20 - 10) + 10 + "px";
+                
+                const duration = Math.random() * (6 - 3) + 3; 
+                p.style.animationDuration = duration + "s";
+                
+                loginScreen.appendChild(p);
+                
+                setTimeout(() => { p.remove(); }, duration * 1000);
+            }, 400);
+        }
+
+        // Spustenie hneď pri načítaní
+        createLoginParticles();
 
         function checkPassword() {
             const entered = document.getElementById("password-field").value;
@@ -553,6 +659,7 @@
         }
 
         function enterApp() {
+            clearInterval(loginParticlesInterval); // Zastavíme generovanie padania
             document.getElementById("login-screen").style.display = "none";
             document.getElementById("main-screen").style.display = "block";
             
@@ -642,7 +749,6 @@
                 box.innerText = i;
 
                 let isUnlocked = false;
-                // Načítanie otvorených okienok podľa prihláseného používateľa
                 const hasOpenedBefore = localStorage.getItem(`${currentUserPrefix}_box_opened_${i}`);
 
                 if (currentMonth === 7) {
@@ -670,7 +776,6 @@
         }
 
         function openGift(day, boxElement) {
-            // Ukladáme pod špecifickým kľúčom daného usera (v adminovi neukladáme trvalo)
             if (!isAdminMode) {
                 localStorage.setItem(`${currentUserPrefix}_box_opened_${day}`, "true");
             }
