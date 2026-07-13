@@ -217,7 +217,7 @@
                     <div style="margin-bottom: 15px;">
                         <button class="hint-btn" onclick="toggleHint(1)">💡 Ako na to?</button>
                         <button class="hint-btn" onclick="toggleHint(2)">🔑 Prvé písmeno</button>
-                        <div id="hint-text-1" class="hint-text-box">ℹ️ <b>Systém kódovania:</b> Vezmi prvé písmená z každého leteckého slova (napr. Alfa=A, Zulu=Z). Dostaneš zakódovaný text. Tento text musíš preložiť cez <b>Atbash šifru</b> (zrkadlovú abecedu: A↔Z, B↔Y, C↔X atď.) a vyjde ti slovenské riešenie! (Medzery písať nemusíš).</div>
+                        <div id="hint-text-1" class="hint-text-box">ℹ️ <b>Systém kódovania:</b> Vezmi prvé písmená z každého leteckého slova (napr. Alfa=A, Zulu=Z). Dostaneš zakódovaný text. Tento text musíš preložiť cez <b>Atbash šifru</b> (zrkadlovú abecedu: A↔Z, B↔Y, C↔X atď.) a vyjde ti slovenské riešening! (Medzery písať nemusíš).</div>
                         <div id="hint-text-2" class="hint-text-box">ℹ️ <b>Malá pomoc:</b> Prvé písmeno hľadaného slova/frázy pre dnešný deň je: <b id="hint-first-letter" style="color:#facc15; font-size:14px;">?</b></div>
                     </div>
                     
@@ -375,6 +375,25 @@
             box.style.display = (box.style.display === "block") ? "none" : "block";
         }
 
+        function checkAndSetMusicSource() {
+            const music = document.getElementById("bg-music");
+            const now = getCurrentTime();
+            let desiredSrc = "media/hudba.mp3";
+            
+            if (now.getMonth() === 6 && now.getDate() === 17) {
+                desiredSrc = "media/hudba2.mp3";
+            }
+            
+            // Premeníme relatívnu cestu, aby sme predišli zbytočnému prebíjaniu rovnakej pesničky dokola
+            if (!music.src.endsWith(desiredSrc)) {
+                const wasPlaying = isMusicPlaying;
+                music.src = desiredSrc;
+                if (wasPlaying) {
+                    music.play().then(() => { toggleAnimationBars(true); }).catch(()=>{});
+                }
+            }
+        }
+
         function setupPuzzle() {
             const dayIdx = getTargetDayIndex();
             document.getElementById("puzzle-day-title").innerText = `Misia na ${dayIdx}. Júl 🔒`;
@@ -442,6 +461,7 @@
         }
 
         function executeLogin() {
+            checkAndSetMusicSource();
             const music = document.getElementById("bg-music");
             music.play().then(() => { isMusicPlaying = true; toggleAnimationBars(true); }).catch(()=>{});
             
@@ -468,6 +488,7 @@
         
         function onTimeEngineUpdate() { 
             document.getElementById("sim-day-val").innerText = document.getElementById("sim-day").value + ".7."; 
+            checkAndSetMusicSource();
             updateCountdown(); generateBoxes(); manageFlightButton(); setupPuzzle(); 
         }
 
@@ -520,6 +541,7 @@
 
             if (now.getMonth() === 6) {
                 if (now.getDate() === 17 && now.getHours() === 3 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+                    checkAndSetMusicSource();
                     generateBoxes();
                 } else if (now.getHours() === 12 && now.getMinutes() === 0 && now.getSeconds() === 0) { 
                     generateBoxes();
